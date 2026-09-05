@@ -17,21 +17,21 @@ class DatabaseSeeder extends Seeder
         User::create([
             'nama' => 'Administrator',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('admin123'),
             'role' => 'admin',
         ]);
 
         User::create([
             'nama' => 'Petugas Satu',
             'email' => 'petugas@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('petugas123'),
             'role' => 'petugas',
         ]);
 
         User::create([
             'nama' => 'Customer Satu',
             'email' => 'customer@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('customer123'),
             'role' => 'customer',
         ]);
     }
