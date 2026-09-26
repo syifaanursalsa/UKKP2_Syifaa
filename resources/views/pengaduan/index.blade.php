@@ -18,7 +18,9 @@
                         <tr>
                             <th style="width: 40px;">No</th>
                             <th>Tanggal</th>
+                            <th>Kategori</th>
                             <th>Isi Pengaduan</th>
+                            <th style="width: 90px;">Foto</th>
                             <th>Status</th>
                             <th style="width: 80px;">Aksi</th>
                         </tr>
@@ -28,7 +30,22 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $p->created_at->format('d M Y') }}</td>
+                                <td>
+                                    @if ($p->kategori)
+                                        <span class="badge text-bg-secondary">{{ $p->kategori->nama_kategori }}</span>
+                                    @else
+                                        <span class="text-muted small">-</span>
+                                    @endif
+                                </td>
                                 <td>{{ Str::limit($p->pengaduan, 60) }}</td>
+                                <td>
+                                    @if ($p->foto)
+                                        <img src="{{ Storage::url($p->foto) }}" alt="Foto bukti"
+                                             style="width: 55px; height: 55px; object-fit: cover; border-radius: .4rem;">
+                                    @else
+                                        <span class="text-muted small">-</span>
+                                    @endif
+                                </td>
                                 <td>
                                     @php
                                         $badge = [
@@ -46,7 +63,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="5" class="text-center text-muted">Belum ada pengaduan.</td></tr>
+                            <tr><td colspan="7" class="text-center text-muted">Belum ada pengaduan.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

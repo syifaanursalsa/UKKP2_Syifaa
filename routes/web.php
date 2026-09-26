@@ -6,17 +6,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\PengaduanController;
+use App\Http\Controllers\KategoriController;
 
 // Beranda langsung diarahkan ke halaman login
 Route::redirect('/', '/login');
 
-// ===== ROUTE AUTH =====
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.proses');
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.proses');
+// ===== ROUTE AUTH (Tidak wajib login untuk akses ini) =====
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.proses');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.proses');
+});
 
-// ===== ROUTE WAJIB LOGIN =====
+// ===== ROUTE WAJIB LOGIN (Semua route di bawah ini harus login dulu) =====
 Route::middleware('auth')->group(function () {
 
     // Logout wajib POST agar lebih aman
@@ -26,6 +29,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return redirect()->route(auth()->user()->role . '.dashboard');
     })->name('dashboard');
+
+    // ===== KHUSUS ADMIN: Kategori ===== (PINDAH KE SINI!)
+    Route::middleware('role:admin')->prefix('kategori')->name('kategori.')->group(function () {
+        Route::get('/', [KategoriController::class, 'index'])->name('index');
+        Route::get('/create', [KategoriController::class, 'create'])->name('create');
+        Route::post('/', [KategoriController::class, 'store'])->name('store');
+        Route::get('/{kategori}/edit', [KategoriController::class, 'edit'])->name('edit');
+        Route::put('/{kategori}', [KategoriController::class, 'update'])->name('update');
+        Route::delete('/{kategori}', [KategoriController::class, 'destroy'])->name('destroy');
+    });
 
     // Area khusus ADMIN
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
@@ -42,7 +55,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'customer'])->name('dashboard');
     });
 
-        // ===== MENU USER (admin & petugas) =====
+    // ===== MENU USER (admin & petugas) =====
     Route::middleware('role:admin,petugas')->prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::get('/create', [UserController::class, 'create'])->name('create');
@@ -57,10 +70,9 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-        // ===== PROFIL (semua role) =====
+    // ===== PROFIL (semua role) =====
     Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
     Route::put('/profil', [ProfilController::class, 'update'])->name('profil.update');
-});
 
     // ===== CUSTOMER: pengaduan milik sendiri =====
     Route::middleware('role:customer')->prefix('pengaduan')->name('pengaduan.')->group(function () {
@@ -72,6 +84,8 @@ Route::middleware('auth')->group(function () {
 
     // ===== ADMIN & PETUGAS: kelola semua pengaduan =====
     Route::middleware('role:admin,petugas')->prefix('kelola-pengaduan')->name('kelola.')->group(function () {
-        Route::get('/', [PengaduanController::class, 'kelola'])->name('pengaduan');
+        Route::get('/', [PengaduanController::class, 'kelolaIndex'])->name('pengaduan'); 
         Route::put('/{pengaduan}/status', [PengaduanController::class, 'updateStatus'])->name('status');
     });
+
+}); // Penutup Route::middleware('auth')

@@ -13,13 +13,15 @@ class CheckRole
      * Cara pakai di route: middleware('role:admin')
      * atau beberapa role: middleware('role:admin,petugas')
      */
-    public function handle(Request $request, Closure $next, ...$roles): Response
-    {
-        // Jika role user tidak termasuk yang diizinkan, tampilkan 403
-        if (! in_array(auth()->user()->role, $roles)) {
-            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-        }
+    public function handle(Request $request, Closure $next, ...$roles)
+{
+    $user = auth()->user(); // Simpan dulu user-nya ke variabel
 
-        return $next($request);
+    // Jika tidak ada user (belum login) ATAU role-nya tidak cocok
+    if (!$user || !in_array($user->role, $roles)) {
+        abort(403, 'Kamu tidak punya akses ke halaman ini.');
     }
+
+    return $next($request);
+}
 }

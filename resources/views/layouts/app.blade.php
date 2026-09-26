@@ -46,7 +46,10 @@
                 <a class="menu" href="{{ route('users.index') }}">
                     <i class="bi bi-people me-2"></i>User
                 </a>
-                <a class="menu" href="{{ route('kelola.pengaduan') }}">
+                 <a class="menu" href="{{ route('kategori.index') }}">
+                  <i class="bi bi-tags-fill me-2"></i>Kategori
+                   </a>
+                    <a class="menu" href="{{ route('kelola.pengaduan') }}">
                     <i class="bi bi-clipboard-data me-2"></i>Kelola Pengaduan
                 </a>
             @endif

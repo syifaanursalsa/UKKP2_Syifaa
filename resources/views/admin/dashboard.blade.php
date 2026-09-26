@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <p class="text-muted small mb-1"><i class="bi bi-people me-1"></i>Total User</p>
                     <h4 class="fw-bold mb-0">{{ $totalUser }}</h4>
-                </div>
+</div>
             </div>
         </div>
 

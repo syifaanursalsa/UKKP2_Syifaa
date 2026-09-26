@@ -34,5 +34,9 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('customer123'),
             'role' => 'customer',
         ]);
+        $kategoris = ['Infrastruktur', 'Pelayanan Publik', 'Keamanan', 'Lingkungan', 'Lainnya'];
+foreach ($kategoris as $k) {
+    \App\Models\Kategori::firstOrCreate(['nama_kategori' => $k]);
+}
     }
 }

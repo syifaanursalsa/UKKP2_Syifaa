@@ -23,15 +23,29 @@
                 </div>
             @endif
 
-            {{-- enctype multipart/form-data WAJIB agar file foto bisa terkirim --}}
             <form action="{{ route('pengaduan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
+                {{-- 1. KATEGORI (paling atas) --}}
                 <div class="mb-3">
-                    <label class="form-label">Isi Pengaduan</label>
-                    <textarea name="pengaduan" rows="5" class="form-control" required>{{ old('pengaduan') }}</textarea>
+                    <label class="form-label">Kategori</label>
+                    <select name="kategori_id" class="form-select" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        @foreach ($kategoris as $k)
+                            <option value="{{ $k->id }}" @selected(old('kategori_id') == $k->id)>
+                                {{ $k->nama_kategori }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
+                {{-- 2. ISI PENGADUAN / DESKRIPSI --}}
+                <div class="mb-3">
+                    <label class="form-label">Isi Pengaduan</label>
+                    <textarea name="pengaduan" rows="5" class="form-control" placeholder="Tuliskan keluhanmu secara jelas..." required>{{ old('pengaduan') }}</textarea>
+                </div>
+
+                {{-- 3. FOTO BUKTI (paling bawah) --}}
                 <div class="mb-4">
                     <label class="form-label">Foto Bukti (opsional)</label>
                     <input type="file" name="foto" class="form-control" accept="image/*">
